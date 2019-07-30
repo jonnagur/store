@@ -1,0 +1,7 @@
+AuthName "manteniback statistics"
+AuthType Basic
+AuthUserFile /home/manteniback/.stats-htpasswd
+require valid-user
+<Files .stats-htpasswd>
+deny from all
+</Files>
