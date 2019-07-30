@@ -3,19 +3,20 @@
 // ini_set('max_execution_time', 300);
 // ini_set('memory_limit', '512M');
 /**
- *	@brief		API_IndexController
+ *	@brief		API_AuthController
  *	@include	Zend_Rest_Controller
  *	@details	This class implements the services to be consumed by the accounting enterprise
  */
 require_once 'Jwt/JWTHelper.php';
 
-class API_IndexController extends Zend_Rest_Controller
+class API_AuthController extends Zend_Rest_Controller
 {
 
     public function init()
     {
-        $this->getHelper('Layout')->disableLayout();
-        $this->getHelper('ViewRenderer')->setNoRender();
+      header('Content-Type: application/json');
+      $this->getHelper('Layout')->disableLayout();
+      $this->getHelper('ViewRenderer')->setNoRender();
     }
 
     public function postAction(){
@@ -42,12 +43,6 @@ class API_IndexController extends Zend_Rest_Controller
     public function indexAction(){
       $result['param1'] = 'parma1';
       $result['param2'] = 'param2';
-      $result['param3'] = 'param3';
-      $result['param4'] = 'param4';
-      $result['param5'] = 'param5';
-      $result['param6'] = 'param6';
-      $result['param7'] = 'param7';
-      $result['param8'] = 'param8';
       $result['param9'] = array(
         "sub_param1" => "sub_param1",
         "sub_param2" => "sub_param2"
