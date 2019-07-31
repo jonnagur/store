@@ -39,7 +39,7 @@ class My_Auth {
 
         if($result["result"]){
             $resultRow = $this->authAdapter->getResultRowObject(
-                    array("username" , "userId" , "roleId","firstName","lastName", "email"));
+                    array("username" , "userId" , "roleId", "firstName", "lastName", "email"));
 
             $auth = Zend_Auth::getInstance();
             $storage = $auth->getStorage();

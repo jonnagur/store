@@ -13,7 +13,6 @@ class My_Validate_API{
   static private $username;
   static private $id;
   static private $role;
-  static private $id_tipo_zona;
 
   public function init(){
   }
@@ -45,7 +44,7 @@ class My_Validate_API{
       $userModel = new API_Model_User();
       $this->setId( $userModel->getUserIdByEmail( self::$username ) );
     }
-    
+
     return self::$id;
   }
 
@@ -62,16 +61,6 @@ class My_Validate_API{
   public function setRole($role)
   {
     self::$role = $role;
-  }
-
-  public function setIdTipoZona( $id_tipo_zona )
-  {
-    self::$id_tipo_zona = $id_tipo_zona;
-  }
-
-  public function getIdTipoZona()
-  {
-    return self::$id_tipo_zona;
   }
 
   public function validate($data){
@@ -95,15 +84,10 @@ class My_Validate_API{
       if (empty($user)) {
         return self::_handleStruct(json_encode(array("cod" => "2230", "msg" => "No se ha podido validar el usuario")));
       }
-      
-      if ($user[0]['status'] != 10) {
-        return self::_handleStruct(json_encode(array("cod" => "2230", "msg" => "No tiene permiso para recuperar ningún recurso")));
-      }
 
       $username     = $user[0]['username'];
       $userId       = $user[0]['userId'];
       $role         = $user[0]['roleId'];
-      $id_tipo_zona = $user[0]['id_tipo_zona'];
 
       $result['cod']  = '200';
       $result['msg']  = $username;
@@ -114,7 +98,6 @@ class My_Validate_API{
       self::setUsername($username);
       self::setId($userId);
       self::setRole($role);
-      self::setIdTipoZona($id_tipo_zona);
     }else{
       self::_handleStruct($token_jwt);
     }

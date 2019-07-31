@@ -19,7 +19,7 @@ class API_Model_User extends My_Model_API {
       $select = $this->dbTable->select()->setIntegrityCheck(false);
       $select->from("user" , array("userId" , "email" , "firstName" , "lastName", "id_tipo_zona"));
       $select->where("id_tipo_zona = $id_tipo_zona");
-      
+
       return $select->query()->fetchAll();
     }
 
@@ -43,7 +43,7 @@ class API_Model_User extends My_Model_API {
 
     public function getUserByUsername($username){
       $select = $this->dbTable->select()->setIntegrityCheck(false);
-      $select->from("user", array("userId", "firstName", "lastName", "username", "email", "roleId", "dni", "authkey", "status", "created_at", "updated_at", "tries", "deviceId", "id_tipo_zona"));
+      $select->from("user", array("userId", "firstName", "lastName", "username", "email", "roleId"));
       $select->join("role", "user.roleId = role.roleId" , "roleName");
       $select->where("user.username =?", $username);
 
@@ -116,7 +116,7 @@ class API_Model_User extends My_Model_API {
       return sha1($password . $salt);
     }
 
-    
+
     /* DEjo comentado el método porque en un principio solo se plantea que sea deshabilitado
     public function deleteUser($userId){
       return $this->dbTable->delete("userId = $userId");
