@@ -19,8 +19,7 @@ class API_CompanyController extends Zend_Rest_Controller
       My_Validate_API::validate($this);
     }
 
-    public function postAction()
-    {
+    public function postAction() {
       if (My_Validate_API::getCod() != '200') {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_CODE);
       }
@@ -56,13 +55,11 @@ class API_CompanyController extends Zend_Rest_Controller
      * [putAction description]
      * @return [type] [description]
      */
-    public function putAction()
-    {
+    public function putAction() {
       $this->getResponse()->setHttpResponseCode(405);
     }
 
-    public function patchAction()
-    {
+    public function patchAction() {
       if (My_Validate_API::getCod() != '200')
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_CODE);
 
@@ -76,18 +73,18 @@ class API_CompanyController extends Zend_Rest_Controller
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_PARAMS);
       }
 
-      $probeModel = new API_Model_Probe();
+      $companyModel = new API_Model_Company();
 
-      $edit_sonda = $probeModel->getProbeByIdOBJECT($data['id']);
+      $edit_company = $companyModel->getCompanyByIdOBJECT($data['id']);
 
-      if (empty($edit_sonda)) {
+      if (empty($edit_company)) {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_RESOURCE_NOT_FOUND);
       }
 
-      $edit_sonda->populateEdit($body);
+      $edit_company->populateEdit($body);
 
       try {
-        $probeModel->editProbe($data['id'], $edit_sonda);
+        $companyModel->editCompany($data['id'], $edit_company);
       } catch (Exception $e) {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_UNKNOWN_ACTION);
       }
@@ -111,37 +108,31 @@ class API_CompanyController extends Zend_Rest_Controller
     }
 
     /**
-     * [ip]/api/probe/gasId/{id} : devuelve las sondas que pertenecen a la gasolinera {id}
-     * [ip]/api/probe/tankCompartmentId/{id_tankcompartment} : devuelve las sondas que pertenecen al compartimento {id_tankcompartment}
-     * [ip]/api/probe/ : devuelve todas las sondas
+     * [ip]/api/company/ : devuelve la empresa a la que pertenece el usuario
      * @return [type] [description]
      */
     public function getAction()
     {
-      if (My_Validate_API::getCod() != '200')
+      if (My_Validate_API::getCod() != '200') {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_CODE);
+      }
 
-      if (My_Validate_API::getRole() !=  My_String::ROLE_SUPER_ADMIN && My_Validate_API::getRole() != My_String::ROLE_ADMIN)
+      if (My_Validate_API::getRole() !=  My_String::ROLE_SUPER_ADMIN && My_Validate_API::getRole() != My_String::ROLE_ADMIN) {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_PERMISSION_DENIED);
+      }
 
       $data = $this->getRequest()->getParams();
       $data = array_map('trim', $data);
 
-      $sondaModel = new API_Model_Probe();
+      $companyModel = new API_Model_Company();
 
-      if (isset($data['gasId'])) {
-        $sondas = $sondaModel->getAllProbeByGasId($data['gasId']);
-      }elseif (isset($data['tankCompartmentId'])) {
-        $sondas = $sondaModel->getAllProbeByTankCompartmentId($data['tankCompartmentId']);
-      }else {
-        $sondas = $sondaModel->getAllProbe();
-      }
+      $company = $companyModel->getCompanyByUser(My_Validate_API::getId());
 
-      if (empty($sondas)) {
+      if (empty($company)) {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_RESOURCE_NOT_FOUND);
       }
 
-      return My_Response::_handleCodeResponse("200", $sondas);
+      return My_Response::_handleCodeResponse("200", $company);
     }
 
 }

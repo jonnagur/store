@@ -37,6 +37,14 @@ class API_Model_Company extends My_Model_API
     return $result;
   }
 
+  public function getCompanyByUser($id_user) {
+    $select = $this->dbTable->select()->setIntegrityCheck( false );
+    $select->from("company");
+    $select->join("user", "company.id_company = user.id_company", array());
+
+    return $select->query()->fetchAll();
+  }
+
   public function deleteCompany($id_company)
   {
     return $this->dbTable->delete("id_company = $id_company");
@@ -47,14 +55,14 @@ class API_Model_Company extends My_Model_API
     $error = 0;
     if (!isset($data['name']))
       $error = 1;
-    // if (!isset($data['address']))
-    //   $error = 1;
-    // if (!isset($data['cp']))
-    //   $error = 1;
-    // if (!isset($data['phone']))
-    //   $error = 1;
-    // if (!isset($data['cif']))
-    //   $error = 1;
+    if (!isset($data['address']))
+      $error = 1;
+    if (!isset($data['cp']))
+      $error = 1;
+    if (!isset($data['phone']))
+      $error = 1;
+    if (!isset($data['cif']))
+      $error = 1;
 
     if ($error) {
       return 0;

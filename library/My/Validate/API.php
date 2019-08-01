@@ -39,12 +39,6 @@ class My_Validate_API{
 
   public function getId()
   {
-    if( self::$id == null )
-    {
-      $userModel = new API_Model_User();
-      $this->setId( $userModel->getUserIdByEmail( self::$username ) );
-    }
-
     return self::$id;
   }
 
