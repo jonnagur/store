@@ -57,7 +57,8 @@ class My_Validate_API{
     self::$role = $role;
   }
 
-  public function validate($data){
+  public function validate($data)
+  {
     $jwt_authorization = $data->getRequest()->getHeader('Authorization');
 
     $token_jwt = self::_handleJwtToken($jwt_authorization);
@@ -65,17 +66,20 @@ class My_Validate_API{
 
     $result = array();
 
-    if ($token_jwt_array['cod'] == '1000') {
+    if ($token_jwt_array['cod'] == '1000')
+    {
       $token_array = (array)$token_jwt_array['msg'];
 
-      if (!isset($token_array['email'])) {
+      if (!isset($token_array['email']))
+      {
         return self::_handleStruct(json_encode(array("cod" => "2250", "msg" => "Token incorrecto")));
       }
 
       $userModel = new API_Model_User();
       $user = $userModel->getUserByUsername($token_array['email']);
 
-      if (empty($user)) {
+      if (empty($user))
+      {
         return self::_handleStruct(json_encode(array("cod" => "2230", "msg" => "No se ha podido validar el usuario")));
       }
 
@@ -92,47 +96,59 @@ class My_Validate_API{
       self::setUsername($username);
       self::setId($userId);
       self::setRole($role);
-    }else{
+    }
+    else
+    {
       self::_handleStruct($token_jwt);
     }
   }
 
-  protected function _handleJwtToken($token_jwt){
+  protected function _handleJwtToken($token_jwt)
+  {
     $result['token'] = "";
     $result['cod'] = "";
 
-    if (! empty($token_jwt)) {
-       try {
-           $token = JWT::validateJWTAPI($token_jwt, My_String::KEY);
-           $result['token'] = $token;
-           $result['cod'] = 1000;
-       } catch (Exception $e) {
+    if (! empty($token_jwt))
+    {
+       try
+       {
+         $token = JWT::validateJWTAPI($token_jwt, My_String::KEY);
+         $result['token'] = $token;
+         $result['cod'] = 1000;
+       }
+       catch (Exception $e)
+       {
          $result['token'] = $e->getMessage();
          $result['cod'] = 2100;
        }
-    } else {
-     $result['cod'] = 2200;
-     $result['token'] = 'Empty token';
+    }
+    else
+    {
+      $result['cod'] = 2200;
+      $result['token'] = 'Empty token';
     }
 
     return self::_handleError($result['cod'], $result['token']);
   }
 
-  protected function _handleError($error, $msg){
+  protected function _handleError($error, $msg)
+  {
     $res_error['cod'] = $error;
     $res_error['msg'] = $msg;
 
     return json_encode($res_error);
   }
 
-  protected function _handleStruct($struct){
-    if (empty($struct)) {
-        $struct = array(
-            "code" => "5095",
-            "msg" => "No record(s) found."
-        );
+  protected function _handleStruct($struct)
+  {
+    if (empty($struct))
+    {
+      $struct = array(
+        "code" => "5095",
+        "msg" => "No record(s) found."
+      );
 
-        $struct = json_encode($struct);
+      $struct = json_encode($struct);
     }
 
     echo $struct;

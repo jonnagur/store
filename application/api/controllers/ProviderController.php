@@ -3,12 +3,12 @@
 // ini_set('max_execution_time', 300);
 // ini_set('memory_limit', '512M');
 /**
- *	@brief		API_WarehouseController
+ *	@brief		API_ProviderController
  *	@include	Zend_Rest_Controller
  *	@details	This class implements the services to be consumed by the accounting enterprise
  */
 
-class API_WarehouseController extends Zend_Rest_Controller
+class API_ProviderController extends Zend_Rest_Controller
 {
     public function init()
     {
@@ -34,21 +34,21 @@ class API_WarehouseController extends Zend_Rest_Controller
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_PERMISSION_DENIED);
       }
 
-      $warehouseModel = new API_Model_Warehouse();
-      $new_warehouse = new My_Object_Warehouse();
+      $providerModel = new API_Model_Provider();
+      $new_provider = new My_Object_Provider();
 
-      $validate = $warehouseModel->validateParams($data);
+      $validate = $providerModel->validateParams($data);
 
       if (!$validate)
       {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_PARAMS);
       }
 
-      $new_warehouse->populate($data);
+      $new_provider->populate($data);
 
       try
       {
-        $warehouseModel->addWarehouse($new_warehouse);
+        $providerModel->addProvider($new_provider);
       }
       catch (Exception $e)
       {
@@ -85,20 +85,20 @@ class API_WarehouseController extends Zend_Rest_Controller
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_PARAMS);
       }
 
-      $warehouseModel = new API_Model_Warehouse();
+      $providerModel = new API_Model_Provider();
 
-      $edit_warehouse = $warehouseModel->getWarehouseByIdOBJECT($data['id']);
+      $edit_provider = $providerModel->getProviderByIdOBJECT($data['id']);
 
-      if (empty($edit_warehouse))
+      if (empty($edit_provider))
       {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_RESOURCE_NOT_FOUND);
       }
 
-      $edit_warehouse->populateEdit($body);
+      $edit_provider->populateEdit($body);
 
       try
       {
-        $warehouseModel->editWarehouse($data['id'], $edit_warehouse);
+        $providerModel->editProvider($data['id'], $edit_provider);
       }
       catch (Exception $e)
       {
@@ -124,7 +124,7 @@ class API_WarehouseController extends Zend_Rest_Controller
     }
 
     /**
-     * [ip]/api/warehouse/ : devuelve el almacen a la que pertenece el usuario
+     * [ip]/api/provider/ : devuelve el proveedor
      * @return [type] [description]
      */
     public function getAction()
@@ -142,16 +142,19 @@ class API_WarehouseController extends Zend_Rest_Controller
       $data = $this->getRequest()->getParams();
       $data = array_map('trim', $data);
 
-      $warehouseModel = new API_Model_Warehouse();
+      $providerModel = new API_Model_Provider();
 
-      $warehouse = $warehouseModel->getWarehouseByUser(My_Validate_API::getId());
+      if (isset($data['id']))
+      {
+        $provider = $providerModel->getProviderByIdOBJECT($data['id']);
+      }
 
-      if (empty($warehouse))
+      if (empty($provider))
       {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_RESOURCE_NOT_FOUND);
       }
 
-      return My_Response::_handleCodeResponse("200", $warehouse);
+      return My_Response::_handleCodeResponse("200", $provider->toArray());
     }
 
 }

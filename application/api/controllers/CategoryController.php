@@ -3,12 +3,12 @@
 // ini_set('max_execution_time', 300);
 // ini_set('memory_limit', '512M');
 /**
- *	@brief		API_WarehouseController
+ *	@brief		API_CategoryController
  *	@include	Zend_Rest_Controller
  *	@details	This class implements the services to be consumed by the accounting enterprise
  */
 
-class API_WarehouseController extends Zend_Rest_Controller
+class API_CategoryController extends Zend_Rest_Controller
 {
     public function init()
     {
@@ -34,21 +34,21 @@ class API_WarehouseController extends Zend_Rest_Controller
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_PERMISSION_DENIED);
       }
 
-      $warehouseModel = new API_Model_Warehouse();
-      $new_warehouse = new My_Object_Warehouse();
+      $categoryModel = new API_Model_Category();
+      $new_category = new My_Object_Category();
 
-      $validate = $warehouseModel->validateParams($data);
+      $validate = $categoryModel->validateParams($data);
 
       if (!$validate)
       {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_PARAMS);
       }
 
-      $new_warehouse->populate($data);
+      $new_category->populate($data);
 
       try
       {
-        $warehouseModel->addWarehouse($new_warehouse);
+        $categoryModel->addCategory($new_category);
       }
       catch (Exception $e)
       {
@@ -85,20 +85,20 @@ class API_WarehouseController extends Zend_Rest_Controller
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_PARAMS);
       }
 
-      $warehouseModel = new API_Model_Warehouse();
+      $categoryModel = new API_Model_Category();
 
-      $edit_warehouse = $warehouseModel->getWarehouseByIdOBJECT($data['id']);
+      $edit_category = $categoryModel->getCategoryByIdOBJECT($data['id']);
 
-      if (empty($edit_warehouse))
+      if (empty($edit_category))
       {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_RESOURCE_NOT_FOUND);
       }
 
-      $edit_warehouse->populateEdit($body);
+      $edit_category->populateEdit($body);
 
       try
       {
-        $warehouseModel->editWarehouse($data['id'], $edit_warehouse);
+        $categoryModel->editCategory($data['id'], $edit_category);
       }
       catch (Exception $e)
       {
@@ -124,7 +124,7 @@ class API_WarehouseController extends Zend_Rest_Controller
     }
 
     /**
-     * [ip]/api/warehouse/ : devuelve el almacen a la que pertenece el usuario
+     * [ip]/api/category/ : devuelve la categoria
      * @return [type] [description]
      */
     public function getAction()
@@ -142,16 +142,19 @@ class API_WarehouseController extends Zend_Rest_Controller
       $data = $this->getRequest()->getParams();
       $data = array_map('trim', $data);
 
-      $warehouseModel = new API_Model_Warehouse();
+      $categoryModel = new API_Model_Category();
 
-      $warehouse = $warehouseModel->getWarehouseByUser(My_Validate_API::getId());
+      if (isset($data['id']))
+      {
+        $category = $categoryModel->getCategoryByIdOBJECT($data['id']);
+      }
 
-      if (empty($warehouse))
+      if (empty($category))
       {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_RESOURCE_NOT_FOUND);
       }
 
-      return My_Response::_handleCodeResponse("200", $warehouse);
+      return My_Response::_handleCodeResponse("200", $category->toArray());
     }
 
 }

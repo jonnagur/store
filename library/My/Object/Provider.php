@@ -1,22 +1,23 @@
 <?php
 
-class My_Object_Warehouse
+class My_Object_Provider
 {
-    private $id_warehouse;
+    private $id_provider;
     private $name;
     private $address;
+    private $cp;
     private $phone;
     private $created;
     private $updated;
 
-    public function getIdWarehouse()
+    public function getIdProvider()
     {
-      return $this->id_warehouse;
+      return $this->id_provider;
     }
 
-    public function setIdWarehouse($id_warehouse)
+    public function setIdProvider($id_provider)
     {
-      $this->id_warehouse = $id_warehouse;
+      $this->id_provider = $id_provider;
     }
 
     public function getName()
@@ -37,6 +38,16 @@ class My_Object_Warehouse
     public function setAddress($address)
     {
       $this->address = $address;
+    }
+
+    public function getCp()
+    {
+      return $this->cp;
+    }
+
+    public function setCp($cp)
+    {
+      $this->cp = $cp;
     }
 
     public function getPhone()
@@ -71,36 +82,40 @@ class My_Object_Warehouse
 
     public function populate($data)
     {
-      if (isset($data["id_warehouse"]))
-          $this->setIdWarehouse($data["id_warehouse"]);
+      if (isset($data["id_provider"]))
+          $this->setIdProvider($data["id_provider"]);
       if (isset($data["name"]))
           $this->setName($data["name"]);
       if (isset($data["address"]))
           $this->setAddress($data["address"]);
+      if (isset($data["cp"]))
+          $this->setCp($data["cp"]);
       if (isset($data["phone"]))
           $this->setPhone($data["phone"]);
       if (isset($data["created"]))
           $this->setCreated($data["created"]);
-      if (isset($data["updated"]))
-          $this->setUpdated($data["updated"]);
+      if (isset($data["update"]))
+          $this->setUpdated($data["update"]);
       return $this;
     }
 
     public function toArray()
     {
       $data = array();
-      if (isset($this->id_warehouse))
-          $data ["id_warehouse"] = $this->getIdWarehouse();
+      if (isset($this->id_provider))
+          $data ["id_provider"] = $this->getIdProvider();
       if (isset($this->name))
           $data ["name"] = $this->getName();
       if (isset($this->address))
           $data ["address"] = $this->getAddress();
+      if (isset($this->cp))
+          $data ["cp"] = $this->getCp();
       if (isset($this->phone))
           $data ["phone"] = $this->getPhone();
       if (isset($this->created))
           $data ["created"] = $this->getCreated();
-      if (isset($this->upadted))
-          $data ["upadted"] = $this->getUpdated();
+      if (isset($this->updated))
+          $data ["updated"] = $this->getUpdated();
       return $data;
     }
 
@@ -110,6 +125,8 @@ class My_Object_Warehouse
           $this->setName($data["name"]);
       if (isset($data["address"]))
           $this->setAddress($data["address"]);
+      if (isset($data["cp"]))
+          $this->setCp($data["cp"]);
       if (isset($data["phone"]))
           $this->setPhone($data["phone"]);
       return $this;

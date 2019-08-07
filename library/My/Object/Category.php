@@ -1,22 +1,20 @@
 <?php
 
-class My_Object_Warehouse
+class My_Object_Category
 {
-    private $id_warehouse;
+    private $id_category;
     private $name;
-    private $address;
-    private $phone;
     private $created;
     private $updated;
 
-    public function getIdWarehouse()
+    public function getIdCategory()
     {
-      return $this->id_warehouse;
+      return $this->id_category;
     }
 
-    public function setIdWarehouse($id_warehouse)
+    public function setIdCategory($id_category)
     {
-      $this->id_warehouse = $id_warehouse;
+      $this->id_category = $id_category;
     }
 
     public function getName()
@@ -27,26 +25,6 @@ class My_Object_Warehouse
     public function setName($name)
     {
       $this->name = $name;
-    }
-
-    public function getAddress()
-    {
-      return $this->address;
-    }
-
-    public function setAddress($address)
-    {
-      $this->address = $address;
-    }
-
-    public function getPhone()
-    {
-      return $this->phone;
-    }
-
-    public function setPhone($phone)
-    {
-      $this->phone = $phone;
     }
 
     public function getCreated()
@@ -71,14 +49,10 @@ class My_Object_Warehouse
 
     public function populate($data)
     {
-      if (isset($data["id_warehouse"]))
-          $this->setIdWarehouse($data["id_warehouse"]);
+      if (isset($data["id_category"]))
+          $this->setIdCategory($data["id_category"]);
       if (isset($data["name"]))
           $this->setName($data["name"]);
-      if (isset($data["address"]))
-          $this->setAddress($data["address"]);
-      if (isset($data["phone"]))
-          $this->setPhone($data["phone"]);
       if (isset($data["created"]))
           $this->setCreated($data["created"]);
       if (isset($data["updated"]))
@@ -89,14 +63,10 @@ class My_Object_Warehouse
     public function toArray()
     {
       $data = array();
-      if (isset($this->id_warehouse))
-          $data ["id_warehouse"] = $this->getIdWarehouse();
+      if (isset($this->id_category))
+          $data ["id_category"] = $this->getIdCategory();
       if (isset($this->name))
           $data ["name"] = $this->getName();
-      if (isset($this->address))
-          $data ["address"] = $this->getAddress();
-      if (isset($this->phone))
-          $data ["phone"] = $this->getPhone();
       if (isset($this->created))
           $data ["created"] = $this->getCreated();
       if (isset($this->upadted))
@@ -108,10 +78,6 @@ class My_Object_Warehouse
     {
       if (isset($data["name"]))
           $this->setName($data["name"]);
-      if (isset($data["address"]))
-          $this->setAddress($data["address"]);
-      if (isset($data["phone"]))
-          $this->setPhone($data["phone"]);
       return $this;
     }
 

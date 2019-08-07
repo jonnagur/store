@@ -25,12 +25,17 @@ class API_Model_Warehouse extends My_Model_API
     return $this->dbTable->update($warehouse->toArray(), "id_warehouse = $id_warehouse");
   }
 
-  public function getWarehouseByIdOBJECT($id_warehouse){
+  public function getWarehouseByIdOBJECT($id_warehouse)
+  {
     $row = $this->dbTable->fetchRow("id_warehouse = $id_warehouse");
     $warehouse = new My_Object_Warehouse();
-    if (!empty($row)) {
+    
+    if (!empty($row))
+    {
       $result = $warehouse->populate($row->toArray());
-    }else{
+    }
+    else
+    {
       $result = array();
     }
 
@@ -40,6 +45,16 @@ class API_Model_Warehouse extends My_Model_API
   public function deleteWarehouse($id_warehouse)
   {
     return $this->dbTable->delete("id_warehouse = $id_warehouse");
+  }
+
+  public function getWarehouseByUser($id_user)
+  {
+    $select = $this->dbTable->select()->setIntegrityCheck( false );
+    $select->from("warehouse");
+    $select->join("user_warehouse", "user_warehouse.id_warehouse = warehouse.id_warehouse", array());
+    $select->where("user_warehouse.id_user =?", $id_user);
+
+    return $select->query()->fetchAll();
   }
 
   public function validateParams($data)

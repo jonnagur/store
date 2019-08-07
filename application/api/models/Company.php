@@ -25,19 +25,24 @@ class API_Model_Company extends My_Model_API
     return $this->dbTable->update($company->toArray(), "id_company = $id_company");
   }
 
-  public function getCompanyByIdOBJECT($id_company){
+  public function getCompanyByIdOBJECT($id_company)
+  {
     $row = $this->dbTable->fetchRow("id_company = $id_company");
     $company = new My_Object_Company();
-    if (!empty($row)) {
+    if (!empty($row))
+    {
       $result = $company->populate($row->toArray());
-    }else {
+    }
+    else
+    {
       $result = array();
     }
 
     return $result;
   }
 
-  public function getCompanyByUser($id_user) {
+  public function getCompanyByUser($id_user)
+  {
     $select = $this->dbTable->select()->setIntegrityCheck( false );
     $select->from("company");
     $select->join("user", "company.id_company = user.id_company", array());

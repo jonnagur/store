@@ -2,11 +2,13 @@
 
 class API_Model_User extends My_Model_API {
 
-    public function __construct() {
+    public function __construct()
+    {
       $this->dbTable = new My_DbTable_User();
     }
 
-    public function getAllUsers(){
+    public function getAllUsers()
+    {
       $select = $this->dbTable->select()->setIntegrityCheck(false);
       $select->from("user" , array("userId" , "username" , "firstName" , "lastName", "id_tipo_zona"));
       $select->join("role", "user.roleId = role.roleId" , "roleName");
@@ -23,7 +25,8 @@ class API_Model_User extends My_Model_API {
       return $select->query()->fetchAll();
     }
 
-    public function getUserById($userid){
+    public function getUserById($userid)
+    {
       $select = $this->dbTable->select()->setIntegrityCheck(false);
       $select->from("user", array("userId", "firstName", "lastName", "username", "email", "roleId", "dni", "authkey", "status", "created_at", "updated_at", "tries", "deviceId", "id_tipo_zona"));
       $select->join("role", "user.roleId = role.roleId" , array("roleName", "roleId"));
@@ -41,7 +44,8 @@ class API_Model_User extends My_Model_API {
       return $select->query()->fetchAll();
     }
 
-    public function getUserByUsername($username){
+    public function getUserByUsername($username)
+    {
       $select = $this->dbTable->select()->setIntegrityCheck(false);
       $select->from("user", array("userId", "firstName", "lastName", "username", "email", "roleId"));
       $select->join("role", "user.roleId = role.roleId" , "roleName");
@@ -69,7 +73,8 @@ class API_Model_User extends My_Model_API {
       return $select->query()->fetchAll();
     }
 
-    public function getUserByEmail($email){
+    public function getUserByEmail($email)
+    {
       $select = $this->dbTable->select()->setIntegrityCheck(false);
       $select->from("user", array("userId", "firstName", "lastName", "username", "email", "roleId", "dni", "authkey", "status", "created_at", "updated_at", "tries", "deviceId", "id_tipo_zona"));
       $select->join("role", "user.roleId = role.roleId" , "roleName");
@@ -78,27 +83,35 @@ class API_Model_User extends My_Model_API {
       return $select->query()->fetchAll();
     }
 
-    public function addUser(My_Object_User $user){
+    public function addUser(My_Object_User $user)
+    {
       return $this->dbTable->insert($user->toArray());
     }
 
-    public function editUser($userId , My_Object_User $user){
+    public function editUser($userId , My_Object_User $user)
+    {
       return $this->dbTable->update($user->toArray(), "userId = $userId");
     }
 
-    public function getUserByIdOBJECT($userId){
+    public function getUserByIdOBJECT($userId)
+    {
       $row = $this->dbTable->fetchRow("userId = $userId");
       $user = new My_Object_User();
-      if (!empty($row)) {
+
+      if (!empty($row))
+      {
         $result = $user->populate($row->toArray());
-      }else {
+      }
+      else
+      {
         $result = array();
       }
 
       return $result;
     }
 
-    public function getUserByNombres($nombre){
+    public function getUserByNombres($nombre)
+    {
       $select = $this->dbTable->select()->setIntegrityCheck(false);
       $select->from("user");
       $select->where ('firstName LIKE ? ',$nombre);
@@ -107,12 +120,14 @@ class API_Model_User extends My_Model_API {
     	return $select->query()->fetchAll();
     }
 
-    public function changePassword($userId , $newPassword , $newSalt){
+    public function changePassword($userId , $newPassword , $newSalt)
+    {
       $this->dbTable->update(array("password" => $newPassword), "userId = $userId");
       $this->dbTable->update(array("salt" => $newSalt), "userId = $userId");
     }
 
-    public function encryptPassword($password , $salt){
+    public function encryptPassword($password , $salt)
+    {
       return sha1($password . $salt);
     }
 
@@ -123,31 +138,38 @@ class API_Model_User extends My_Model_API {
     }
     */
 
-    public function inhabilitateUser($userId){
+    public function inhabilitateUser($userId)
+    {
       return $this->dbTable->update( [ "status" => My_Object_User::STATUS_DELETED ] , "userId = $userId");
     }
 
-    public function rehabilitateUser($userId){
+    public function rehabilitateUser($userId)
+    {
       return $this->dbTable->update( [ "status" => My_Object_User::STATUS_ACTIVE ] , "userId = $userId");
     }
 
-    public function normaliza ($cadena){
+    public function normaliza ($cadena)
+    {
       $originales = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ';
       $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr';
       $cadena = utf8_decode($cadena);
       $cadena = strtr($cadena, utf8_decode($originales), $modificadas);
       $cadena = strtolower($cadena);
+
       return utf8_encode($cadena);
     }
 
-    public function ConvertToUTF8($text){
+    public function ConvertToUTF8($text)
+    {
       $encoding = mb_detect_encoding($text, mb_detect_order(), false);
 
-      if($encoding == "UTF-8"){
+      if($encoding == "UTF-8")
+      {
         $text = mb_convert_encoding($text, 'UTF-8', 'UTF-8');
       }
 
       $out = iconv(mb_detect_encoding($text, mb_detect_order(), false), "UTF-8//IGNORE", $text);
+
       return $out;
     }
 
@@ -158,9 +180,12 @@ class API_Model_User extends My_Model_API {
     * @param contenido, contenido del correo
     * @return Nada 587 startttls
     */
-    public function sendemail($asunto, $destinatarios, $contenido){
-      try {
-        if (!empty($destinatarios)) {
+    public function sendemail($asunto, $destinatarios, $contenido)
+    {
+      try
+      {
+        if (!empty($destinatarios))
+        {
           $smtpServer = 'email-smtp.eu-west-1.amazonaws.com';
           $username1 = 'AKIAIXFXFWUB6WW5DXZA';
           $password1 = 'Anu8ye2JOPdHKvbwglssWwLuMlcLidRid7R5Gb9SKfTR';
@@ -175,7 +200,8 @@ class API_Model_User extends My_Model_API {
           $mail = new Zend_Mail();
           $mail->setFrom('info@petroprix.com');
 
-          foreach ($destinatarios as $destinos) {
+          foreach ($destinatarios as $destinos)
+          {
             $mail->addTo($destinos, $destinos);
           }
 
@@ -186,20 +212,26 @@ class API_Model_User extends My_Model_API {
 
           $mail->setBodyHtml(utf8_decode($contenido));
 
-          try {
+          try
+          {
             $mail->send($transport);
             return true;
-          } catch (Exception $e) {
+          }
+          catch (Exception $e)
+          {
             echo "No se ha podido enviar el correo";
             return false;
           }
         }
-      } catch (Exception $e) {
+      }
+      catch (Exception $e)
+      {
         return false;
       }
     }
 
-    public function getUserByIdTipoZonaAndIdGas($id_tipo_zona, $id_gas){
+    public function getUserByIdTipoZonaAndIdGas($id_tipo_zona, $id_gas)
+    {
       $select = $this->dbTable->select()->setIntegrityCheck(false);
       $select->from("user", array("userId", "firstName", "lastName", "username", "email", "roleId", "dni", "authkey", "status", "created_at", "updated_at", "tries", "deviceId", "id_tipo_zona"));
       $select->join("role", "user.roleId = role.roleId" , "roleName");
@@ -211,7 +243,8 @@ class API_Model_User extends My_Model_API {
       return $select->query()->fetchAll();
     }
 
-    public function getUserByIdTipoZonaAndIdZona($id_tipo_zona, $id_zona){
+    public function getUserByIdTipoZonaAndIdZona($id_tipo_zona, $id_zona)
+    {
       $select = $this->dbTable->select()->setIntegrityCheck(false);
       $select->from("user", array("userId", "firstName", "lastName", "username", "email", "roleId", "dni", "authkey", "status", "created_at", "updated_at", "tries", "deviceId", "id_tipo_zona"));
       $select->join("role", "user.roleId = role.roleId" , "roleName");
@@ -223,7 +256,8 @@ class API_Model_User extends My_Model_API {
       return $select->query()->fetchAll();
     }
 
-    public function getUserByIdTipoZona($id_tipo_zona){
+    public function getUserByIdTipoZona($id_tipo_zona)
+    {
       $select = $this->dbTable->select()->setIntegrityCheck(false);
       $select->from("user", array("userId", "firstName", "lastName", "username", "email", "roleId", "dni", "authkey", "status", "created_at", "updated_at", "tries", "deviceId", "id_tipo_zona"));
       $select->join("role", "user.roleId = role.roleId" , "roleName");
