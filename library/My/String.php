@@ -19,6 +19,10 @@
     const ERROR_MSG_INVALID_FRONT_VERSION       = 'Versión de la app no válida.';
     const ERROR_MSG_UNSUPPORTED_FRONT_VERSION   = 'Su versión de la app no está soportada. Por favor, actualice. Si ya está en la última, contacte con el administrador.';
     const ERROR_MSG_USER_AND_PASSWORD_DENIED    = 'Usuario y/o contraseña incorrectas';
+    const ERROR_MSG_CATEGORY_NOT_FOUND          = 'Categoria no encontrada';
+    const ERROR_MSG_PROVIDER_NOT_FOUND          = 'Proveedor no encontrado';
+    const ERROR_MSG_WAREHOUSE_NOT_FOUND         = 'Almacén no encontrado';
+    const ERROR_MSG_ARTICLE_NOT_FOUND           = 'Artículo no encontrado';
 
     const WARNING_MSG_INFERIOR_FRONT_VERSION    = 'Existe una nueva versión disponible de la app. Le recomendamos actualizar cuando sea posible.';
     const WARNING_MSG_SUPERIOR_FRONT_VERSION    = 'Su versión de la app es superior a la actualmente soportada.';

@@ -3,12 +3,12 @@
 // ini_set('max_execution_time', 300);
 // ini_set('memory_limit', '512M');
 /**
- *	@brief		API_SubcategoryController
+ *	@brief		API_WarehousearticleController
  *	@include	Zend_Rest_Controller
  *	@details	This class implements the services to be consumed by the accounting enterprise
  */
 
-class API_SubcategoryController extends Zend_Rest_Controller
+class API_WarehousearticleController extends Zend_Rest_Controller
 {
     public function init()
     {
@@ -34,25 +34,31 @@ class API_SubcategoryController extends Zend_Rest_Controller
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_PERMISSION_DENIED);
       }
 
-      $subcategoryModel = new API_Model_Subcategory();
-      $new_subcategory = new My_Object_Subcategory();
+      $warehousearticleModel = new API_Model_Warehousearticle();
+      $new_warehousearticle = new My_Object_Warehousearticle();
 
-      $validate = $subcategoryModel->validateParams($data);
+      $validate = $warehousearticleModel->validateParams($data);
 
       if ($validate == 0)
       {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_PARAMS);
       }
 
-      if ($validate == 2) {
-        return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_CATEGORY_NOT_FOUND);
+      if ($validate == 2)
+      {
+        return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_WAREHOUSE_NOT_FOUND);
       }
 
-      $new_subcategory->populate($data);
+      if ($validate == 3)
+      {
+        return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_ARTICLE_NOT_FOUND);
+      }
+
+      $new_warehousearticle->populate($data);
 
       try
       {
-        $subcategoryModel->addSubcategory($new_subcategory);
+        $warehousearticleModel->addWarehouse($new_warehousearticle);
       }
       catch (Exception $e)
       {
@@ -89,20 +95,20 @@ class API_SubcategoryController extends Zend_Rest_Controller
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_PARAMS);
       }
 
-      $subcategoryModel = new API_Model_Subcategory();
+      $warehousearticleModel = new API_Model_Warehousearticle();
 
-      $edit_subcategory = $subcategoryModel->getSubcategoryByIdOBJECT($data['id']);
+      $edit_warehouse_article = $warehousearticleModel->getWarehousearticleByIdOBJECT($data['id']);
 
-      if (empty($edit_subcategory))
+      if (empty($edit_warehouse_article))
       {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_RESOURCE_NOT_FOUND);
       }
 
-      $edit_subcategory->populateEdit($body);
+      $edit_warehouse_article->populateEdit($body);
 
       try
       {
-        $subcategoryModel->editSubcategory($data['id'], $edit_subcategory);
+        $warehousearticleModel->editWarehousearticle($data['id'], $edit_warehouse_article);
       }
       catch (Exception $e)
       {
@@ -128,7 +134,7 @@ class API_SubcategoryController extends Zend_Rest_Controller
     }
 
     /**
-     * [ip]/api/subcategory/ : devuelve la subcategoria
+     * [ip]/api/warehousearticle/id_warehouse/1/id_article/1
      * @return [type] [description]
      */
     public function getAction()
@@ -146,19 +152,31 @@ class API_SubcategoryController extends Zend_Rest_Controller
       $data = $this->getRequest()->getParams();
       $data = array_map('trim', $data);
 
-      $subcategoryModel = new API_Model_Subcategory();
+      $warehousearticleModel = new API_Model_Warehousearticle();
 
       if (isset($data['id']))
       {
-        $subcategory = $subcategoryModel->getSubcategoryByIdOBJECT($data['id']);
+        $warehousearticles = $warehousearticleModel->getWarehouseById($data['id']);
+      }
+      elseif (isset($data['id_warehouse']) && isset($data['id_article']) )
+      {
+        $warehousearticles = $warehousearticleModel->getWarehousearticleByWarehouseAndArticle(0, $data['id_warehouse'], $data['id_article']);
+      }
+      elseif (isset($data['id_warehouse']))
+      {
+        $warehousearticles = $warehousearticleModel->getWarehousearticleByWarehouseAndArticle(1, $data['id_warehouse']);
+      }
+      elseif (isset($data['id_article']))
+      {
+        $warehousearticles = $warehousearticleModel->getWarehousearticleByWarehouseAndArticle(2, $data['id_article']);
       }
 
-      if (empty($subcategory))
+      if (empty($warehousearticles))
       {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_RESOURCE_NOT_FOUND);
       }
 
-      return My_Response::_handleCodeResponse("200", $subcategory->toArray());
+      return My_Response::_handleCodeResponse("200", $warehousearticles);
     }
 
 }

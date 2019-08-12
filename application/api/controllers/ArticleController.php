@@ -3,12 +3,12 @@
 // ini_set('max_execution_time', 300);
 // ini_set('memory_limit', '512M');
 /**
- *	@brief		API_SubcategoryController
+ *	@brief		API_WarehouseController
  *	@include	Zend_Rest_Controller
  *	@details	This class implements the services to be consumed by the accounting enterprise
  */
 
-class API_SubcategoryController extends Zend_Rest_Controller
+class API_WarehouseController extends Zend_Rest_Controller
 {
     public function init()
     {
@@ -34,25 +34,31 @@ class API_SubcategoryController extends Zend_Rest_Controller
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_PERMISSION_DENIED);
       }
 
-      $subcategoryModel = new API_Model_Subcategory();
-      $new_subcategory = new My_Object_Subcategory();
+      $articleModel = new API_Model_Article();
+      $new_article = new My_Object_Article();
 
-      $validate = $subcategoryModel->validateParams($data);
+      $validate = $articleModel->validateParams($data);
 
       if ($validate == 0)
       {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_PARAMS);
       }
 
-      if ($validate == 2) {
+      if ($validate == 2)
+      {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_CATEGORY_NOT_FOUND);
       }
 
-      $new_subcategory->populate($data);
+      if ($validate == 3)
+      {
+        return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_PROVIDER_NOT_FOUND);
+      }
+
+      $new_article->populate($data);
 
       try
       {
-        $subcategoryModel->addSubcategory($new_subcategory);
+        $articleModel->addArticle($new_article);
       }
       catch (Exception $e)
       {
@@ -89,20 +95,20 @@ class API_SubcategoryController extends Zend_Rest_Controller
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_PARAMS);
       }
 
-      $subcategoryModel = new API_Model_Subcategory();
+      $articleModel = new API_Model_Article();
 
-      $edit_subcategory = $subcategoryModel->getSubcategoryByIdOBJECT($data['id']);
+      $edit_article = $articleModel->getArticleByIdOBJECT($data['id']);
 
-      if (empty($edit_subcategory))
+      if (empty($edit_article))
       {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_RESOURCE_NOT_FOUND);
       }
 
-      $edit_subcategory->populateEdit($body);
+      $edit_article->populateEdit($body);
 
       try
       {
-        $subcategoryModel->editSubcategory($data['id'], $edit_subcategory);
+        $articleModel->editArticle($data['id'], $edit_article);
       }
       catch (Exception $e)
       {
@@ -128,7 +134,8 @@ class API_SubcategoryController extends Zend_Rest_Controller
     }
 
     /**
-     * [ip]/api/subcategory/ : devuelve la subcategoria
+     * [ip]/api/aricle/ : devuelve el artículo
+     * [ip]/api/aricle/id_category/1/id_provider/2
      * @return [type] [description]
      */
     public function getAction()
@@ -146,19 +153,31 @@ class API_SubcategoryController extends Zend_Rest_Controller
       $data = $this->getRequest()->getParams();
       $data = array_map('trim', $data);
 
-      $subcategoryModel = new API_Model_Subcategory();
+      $articleModel = new API_Model_Article();
 
       if (isset($data['id']))
       {
-        $subcategory = $subcategoryModel->getSubcategoryByIdOBJECT($data['id']);
+        $articles = $articleModel->getArticleById($data['id']);
+      }
+      elseif (isset($data['id_category']) && isset($data['id_provider']) )
+      {
+        $articles = $articleModel->getArticlesByCategoryAndProvider(0, $data['id_category'], $data['id_provider']);
+      }
+      elseif (isset($data['id_category']))
+      {
+        $articles = $articleModel->getArticlesByCategoryAndProvider(1, $data['id_category']);
+      }
+      elseif (isset($data['id_provider']))
+      {
+        $articles = $articleModel->getArticlesByCategoryAndProvider(2, $data['id_provider']);
       }
 
-      if (empty($subcategory))
+      if (empty($articles))
       {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_RESOURCE_NOT_FOUND);
       }
 
-      return My_Response::_handleCodeResponse("200", $subcategory->toArray());
+      return My_Response::_handleCodeResponse("200", $articles);
     }
 
 }
