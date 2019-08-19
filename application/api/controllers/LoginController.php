@@ -9,7 +9,7 @@
  */
 require_once 'Jwt/JWTHelper.php';
 
-class API_AuthController extends Zend_Rest_Controller
+class API_LoginController extends Zend_Rest_Controller
 {
 
     public function init()
@@ -24,11 +24,13 @@ class API_AuthController extends Zend_Rest_Controller
 
       $data = $this->getRequest()->getParams();
 
-      if (!isset($data['username']) || !isset($data['password']) ) {
-        return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_PARAMS);
+      // print_r($data);
+
+      if (!isset($data['email']) || !isset($data['password']) ) {
+        return My_Response::_handleCodeResponse("400", "ERROR");
       }
 
-      $username = $data['username'];
+      $username = $data['email'];
       $password = $data['password'];
 
       $authResult = $auth->login($username, $password);
@@ -86,7 +88,9 @@ class API_AuthController extends Zend_Rest_Controller
 
         }
 
-        return My_Response::_handleCodeResponse("200", $result);
+        $result_token["token"] = $jwt;
+
+        echo json_encode($result_token);
       } else {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_USER_AND_PASSWORD_DENIED);
       }

@@ -67,7 +67,8 @@ class API_Model_Send extends My_Model_API
     if (!isset($data['id_user']))
       $error = 1;
 
-    if ($error) {
+    if ($error)
+    {
       return 0;
     }
 
