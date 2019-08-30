@@ -8,7 +8,7 @@
  *	@details	This class implements the services to be consumed by the accounting enterprise
  */
 
-class API_WarehouseController extends Zend_Rest_Controller
+class API_ArticleController extends Zend_Rest_Controller
 {
     public function init()
     {
@@ -136,6 +136,7 @@ class API_WarehouseController extends Zend_Rest_Controller
     /**
      * [ip]/api/aricle/ : devuelve el artículo
      * [ip]/api/aricle/id_category/1/id_provider/2
+     * [ip]/api/article/id_warehouse/{id}
      * @return [type] [description]
      */
     public function getAction()
@@ -154,10 +155,25 @@ class API_WarehouseController extends Zend_Rest_Controller
       $data = array_map('trim', $data);
 
       $articleModel = new API_Model_Article();
+      $warehouseModel = new API_Model_Warehouse();
 
-      if (isset($data['id']))
+      if (isset($data['name']) && isset($data['id_warehouse'])) {
+        $articles = $articleModel->getLikeArticleByNameAndWarehouse($data['name'], $data['id_warehouse']);
+      }
+      elseif (isset($data['id']))
       {
         $articles = $articleModel->getArticleById($data['id']);
+      }
+      elseif (isset($data['id_warehouse']))
+      {
+        $isValid = $warehouseModel->getWarehouseByUserAndIdWarehouse(My_Validate_API::getId(), $data['id_warehouse']);
+
+        if (empty($isValid))
+        {
+          return My_Response::_handleCodeResponse("404", My_String::ERROR_MSG_PERMISSION_DENIED);
+        }
+
+        $articles = $articleModel->getAllArticlesByWarehouse($data['id_warehouse']);
       }
       elseif (isset($data['id_category']) && isset($data['id_provider']) )
       {
@@ -174,7 +190,7 @@ class API_WarehouseController extends Zend_Rest_Controller
 
       if (empty($articles))
       {
-        return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_RESOURCE_NOT_FOUND);
+        return My_Response::_handleCodeResponse("401", My_String::ERROR_MSG_RESOURCE_NOT_FOUND);
       }
 
       return My_Response::_handleCodeResponse("200", $articles);

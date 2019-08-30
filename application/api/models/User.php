@@ -47,7 +47,7 @@ class API_Model_User extends My_Model_API {
     public function getUserByUsername($username)
     {
       $select = $this->dbTable->select()->setIntegrityCheck(false);
-      $select->from("user", array("userId", "firstName", "lastName", "username", "email", "roleId"));
+      $select->from("user", array("userId", "firstName", "lastName", "username", "email", "roleId", "id_company"));
       $select->join("role", "user.roleId = role.roleId" , "roleName");
       $select->where("user.username =?", $username);
 

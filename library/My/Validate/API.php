@@ -13,6 +13,7 @@ class My_Validate_API{
   static private $username;
   static private $id;
   static private $role;
+  static private $company;
 
   public function init(){
   }
@@ -57,6 +58,16 @@ class My_Validate_API{
     self::$role = $role;
   }
 
+  public function getCompany()
+  {
+    return self::$company;
+  }
+
+  public function setCompany($company)
+  {
+    self::$company = $company;
+  }
+
   public function validate($data)
   {
     $jwt_authorization = $data->getRequest()->getHeader('Authorization');
@@ -86,16 +97,19 @@ class My_Validate_API{
       $username     = $user[0]['username'];
       $userId       = $user[0]['userId'];
       $role         = $user[0]['roleId'];
+      $company      = $user[0]['id_company'];
 
-      $result['cod']  = '200';
-      $result['msg']  = $username;
-      $result['id']   = $userId;
-      $result['role'] = $role;
+      $result['cod']     = '200';
+      $result['msg']     = $username;
+      $result['id']      = $userId;
+      $result['role']    = $role;
+      $result['company'] = $company;
 
       self::setCod($result['cod']);
       self::setUsername($username);
       self::setId($userId);
       self::setRole($role);
+      self::setCompany($company);
     }
     else
     {

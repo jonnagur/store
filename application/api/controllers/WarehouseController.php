@@ -142,9 +142,26 @@ class API_WarehouseController extends Zend_Rest_Controller
       $data = $this->getRequest()->getParams();
       $data = array_map('trim', $data);
 
+      if (!isset($data['id']) && !isset($data['getAllWarehousesByMyCompany']))
+      {
+        return My_Response::_handleCodeResponse("404", My_String::ERROR_MSG_INVALID_PARAMS);          
+      }
+
       $warehouseModel = new API_Model_Warehouse();
 
-      $warehouse = $warehouseModel->getWarehouseByUser(My_Validate_API::getId());
+      if (isset($data['id']))
+      {
+        $warehouse = $warehouseModel->getWarehouseByIdOBJECT($data['id']);
+
+        if (!empty($warehouse))
+        {
+          $warehouse = $warehouse->toArray();
+        }
+      }
+      elseif (isset($data['getAllWarehousesByMyCompany']))
+      {
+        $warehouse = $warehouseModel->getAllWarehouseByIdCompany(My_Validate_API::getCompany());
+      }
 
       if (empty($warehouse))
       {

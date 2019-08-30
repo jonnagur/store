@@ -51,8 +51,37 @@ class API_Model_Send extends My_Model_API
   {
     $select = $this->dbTable->select()->setIntegrityCheck( false );
     $select->from("send");
-    $select->join("user_Send", "user_Send.id_Send = Send.id_Send", array());
-    $select->where("user_Send.id_user =?", $id_user);
+    $select->where("send.id_user =?", $id_user);
+
+    return $select->query()->fetchAll();
+  }
+
+  public function getSendByUserAndDateStartEnd($id_user, $date_start, $date_end)
+  {
+    $select = $this->dbTable->select()->setIntegrityCheck( false );
+    $select->from("send");
+
+    if ($date_start)
+    {
+      $select->where("date(created) >=?", $date_start);
+    }
+
+    if ($date_end)
+    {
+      $select->where("date(created) <=?", $date_end);
+    }
+
+    $select->where("send.id_user =?", $id_user);
+
+    return $select->query()->fetchAll();
+  }
+
+  public function getArticlesBySend($id_send) {
+    $select = $this->dbTable->select()->setIntegrityCheck( false );
+    $select->from("send", array());
+    $select->join("line_send", "line_send.id_send = send.id_send");
+    $select->join("article", "article.id_article = line_send.id_article", array("name as name_article"));
+    $select->where("line_send.id_send =?", $id_send);
 
     return $select->query()->fetchAll();
   }
@@ -64,12 +93,17 @@ class API_Model_Send extends My_Model_API
       $error = 1;
     if (!isset($data['id_destination_warehouse']))
       $error = 1;
-    if (!isset($data['id_user']))
+    if (!isset($data['articles']))
       $error = 1;
 
     if ($error)
     {
       return 0;
+    }
+
+    if (empty($data['articles']))
+    {
+      return 4;
     }
 
     $warehouseModel = new API_Model_Warehouse();
@@ -89,5 +123,47 @@ class API_Model_Send extends My_Model_API
 
     return 1;
   }
+
+  public function getSendByCode($code)
+  {
+    $select = $this->dbTable->select()->setIntegrityCheck( false );
+    $select->from("send");
+    $select->where("code =?", $code);
+
+    return $select->query()->fetchAll();
+  }
+
+  public function generateCode() {
+    $length = 15;
+    // $code = md5(uniqid(rand(), true));
+
+    $characters = My_String::CHARACTERS;
+
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++)
+    {
+      $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+
+    $code = $randomString;
+    $issetCode = $this->getSendByCode($code);
+
+    $ite = 0;
+
+    while($ite < 10)
+    {
+      if (empty($issetCode))
+      {
+        return $code;
+      }
+
+      $ite++;
+    }
+
+    return array();
+  }
+
+
 
 }

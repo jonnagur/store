@@ -16,10 +16,14 @@ class API_IndexController extends Zend_Rest_Controller
     {
         $this->getHelper('Layout')->disableLayout();
         $this->getHelper('ViewRenderer')->setNoRender();
+        header('Content-Type: application/json');
     }
 
     public function postAction(){
-      print(json_encode(array("cod" => "200", "type" => "post")));
+      $data = $this->getRequest()->getParams();
+
+      print(json_encode($data));
+      // print(json_encode(array("cod" => "200", "type" => "post")));
     }
 
     public function putAction(){

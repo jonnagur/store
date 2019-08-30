@@ -5,6 +5,7 @@
 *	@include	Zend_Controller_Action
 *	@details	Esta clase se encarga manejar acciones correspondientes a los errores del sistema
 */
+
 class API_ErrorController extends Zend_Controller_Action {
 
     /**

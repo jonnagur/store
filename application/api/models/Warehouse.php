@@ -15,6 +15,16 @@ class API_Model_Warehouse extends My_Model_API
     return $select->query()->fetchAll();
   }
 
+  public function getAllWarehouseByIdCompany($id_company)
+  {
+    $select = $this->dbTable->select()->setIntegrityCheck( false );
+    $select->from("warehouse");
+    $select->join("company", "company.id_company = warehouse.id_company", array());
+    $select->where("company.id_company =?", $id_company);
+
+    return $select->query()->fetchAll();
+  }
+
   public function addWarehouse(My_Object_Warehouse $warehouse)
   {
     return $this->dbTable->insert($warehouse->toArray());
@@ -29,7 +39,7 @@ class API_Model_Warehouse extends My_Model_API
   {
     $row = $this->dbTable->fetchRow("id_warehouse = $id_warehouse");
     $warehouse = new My_Object_Warehouse();
-    
+
     if (!empty($row))
     {
       $result = $warehouse->populate($row->toArray());
@@ -53,6 +63,18 @@ class API_Model_Warehouse extends My_Model_API
     $select->from("warehouse");
     $select->join("user_warehouse", "user_warehouse.id_warehouse = warehouse.id_warehouse", array());
     $select->where("user_warehouse.id_user =?", $id_user);
+    $select->order("warehouse.name asc");
+
+    return $select->query()->fetchAll();
+  }
+
+  public function getWarehouseByUserAndIdWarehouse($id_user, $id_warehouse)
+  {
+    $select = $this->dbTable->select()->setIntegrityCheck( false );
+    $select->from("warehouse");
+    $select->join("user_warehouse", "user_warehouse.id_warehouse = warehouse.id_warehouse", array());
+    $select->where("user_warehouse.id_user =?", $id_user);
+    $select->where("user_warehouse.id_warehouse =?", $id_warehouse);
 
     return $select->query()->fetchAll();
   }

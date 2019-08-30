@@ -84,6 +84,29 @@ class API_Model_Article extends My_Model_API
     return $select->query()->fetchAll();
   }
 
+  public function getAllArticlesByWarehouse($id_warehouse)
+  {
+    $select = $this->dbTable->select()->setIntegrityCheck( false );
+    $select->from("article", array("name", "price", "code"));
+    $select->join("category", "category.id_category = article.id_category", array("name as name_category"));
+    $select->join("provider", "provider.id_provider = article.id_provider", array("name as name_provider"));
+    $select->join("warehouse_article", "warehouse_article.id_article = article.id_article", array("id_warehouse_article", "stock", "minimum_stock"));
+    $select->where("warehouse_article.id_warehouse =?", $id_warehouse);
+
+    return $select->query()->fetchAll();
+  }
+
+  public function getLikeArticleByNameAndWarehouse($name, $id_warehouse)
+  {
+    $select = $this->dbTable->select()->setIntegrityCheck( false );
+    $select->from("article", array("id_article", "name", "price", "code"));
+    $select->join("warehouse_article", "warehouse_article.id_article = article.id_article", array("id_warehouse_article", "stock", "minimum_stock"));
+    $select->where("article.name LIKE ?", "%".$name."%");
+    $select->where("warehouse_article.id_warehouse =?", $id_warehouse);
+
+    return $select->query()->fetchAll();
+  }
+
   public function validateParams($data)
   {
     $error = 0;

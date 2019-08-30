@@ -22,6 +22,11 @@
 /** Zend_Controller_Action */
 require_once 'Zend/Controller/Action.php';
 
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+header("Allow: GET, POST, OPTIONS, PUT, DELETE");
+
 /**
  * An abstract class to guide implementation of action controllers for use with
  * Zend_Rest_Route.

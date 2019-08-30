@@ -24,8 +24,6 @@ class API_LoginController extends Zend_Rest_Controller
 
       $data = $this->getRequest()->getParams();
 
-      // print_r($data);
-
       if (!isset($data['email']) || !isset($data['password']) ) {
         return My_Response::_handleCodeResponse("400", "ERROR");
       }
@@ -47,7 +45,7 @@ class API_LoginController extends Zend_Rest_Controller
         $time = time();
         $key = My_String::KEY;
 
-        $time_token = $time + (60*30);
+        $time_token = $time + (60*60*24); //media hora
         $time_refresh_token = $time + (60*60*24*7);
 
         $token = array(
@@ -65,7 +63,7 @@ class API_LoginController extends Zend_Rest_Controller
         /**generate refresh token*/
         $refresh_token = array(
           'iat' => $time, // Tiempo que inició el token
-          'exp' => $time_refresh_token, // Tiempo que expirará 1 minuto
+          'exp' => $time_refresh_token, //
           'data' => $result['nombre'],
           'apellido' => $result['apellido'],
           'email' => $result['email']
