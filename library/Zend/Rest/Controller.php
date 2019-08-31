@@ -24,8 +24,8 @@ require_once 'Zend/Controller/Action.php';
 
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Headers: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-header("Allow: GET, POST, OPTIONS, PUT, DELETE");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE, PATCH");
+header("Allow: GET, POST, OPTIONS, PUT, DELETE, PATCH");
 
 /**
  * An abstract class to guide implementation of action controllers for use with

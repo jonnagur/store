@@ -76,12 +76,45 @@ class API_Model_Send extends My_Model_API
     return $select->query()->fetchAll();
   }
 
-  public function getArticlesBySend($id_send) {
+  public function getReceiveByUserAndDateStartEnd($warehouse, $date_start, $date_end)
+  {
+    $select = $this->dbTable->select()->setIntegrityCheck( false );
+    $select->from("send");
+
+    if ($date_start)
+    {
+      $select->where("date(created) >=?", $date_start);
+    }
+
+    if ($date_end)
+    {
+      $select->where("date(created) <=?", $date_end);
+    }
+
+    $select->where("send.id_destination_warehouse in ($warehouse)");
+
+    return $select->query()->fetchAll();
+  }
+
+  public function getArticlesBySend($id_send)
+  {
     $select = $this->dbTable->select()->setIntegrityCheck( false );
     $select->from("send", array());
     $select->join("line_send", "line_send.id_send = send.id_send");
     $select->join("article", "article.id_article = line_send.id_article", array("name as name_article"));
     $select->where("line_send.id_send =?", $id_send);
+
+    return $select->query()->fetchAll();
+  }
+
+  public function getAllArticlesPendingBySend($id_send)
+  {
+    $select = $this->dbTable->select()->setIntegrityCheck( false );
+    $select->from("send", array());
+    $select->join("line_send", "line_send.id_send = send.id_send");
+    $select->join("article", "article.id_article = line_send.id_article", array("name as name_article"));
+    $select->where("line_send.id_send =?", $id_send);
+    $select->where("line_send.status in ('pending', 'received_partial')");
 
     return $select->query()->fetchAll();
   }
@@ -134,7 +167,7 @@ class API_Model_Send extends My_Model_API
   }
 
   public function generateCode() {
-    $length = 15;
+    $length = 40;
     // $code = md5(uniqid(rand(), true));
 
     $characters = My_String::CHARACTERS;

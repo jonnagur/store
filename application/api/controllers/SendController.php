@@ -181,11 +181,17 @@ class API_SendController extends Zend_Rest_Controller
       $data = array_map('trim', $data);
       $result = array();
 
+      if (!isset($data['type']) || ($data['type'] != "send" && $data['type'] != 'receive'))
+      {
+        return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_PARAMS);
+      }
+
       $sendModel = new API_Model_Send();
       $warehouseModel = new API_Model_Warehouse();
 
       $date_start = null;
       $date_end = null;
+      $type_search = 'send';
 
       if (isset($data['date_start']))
         $date_start = $data['date_start'];
@@ -193,7 +199,24 @@ class API_SendController extends Zend_Rest_Controller
       if (isset($data['date_end']))
         $date_end = $data['date_end'];
 
-      $sends = $sendModel->getSendByUserAndDateStartEnd(My_Validate_API::getId(), $date_start, $date_end);
+      if ($data['type'] == 'send')
+      {
+        $sends = $sendModel->getSendByUserAndDateStartEnd(My_Validate_API::getId(), $date_start, $date_end);
+      }
+      else
+      {
+        $warehouseModel = new API_Model_Warehouse();
+
+        $warehouses = $warehouseModel->getWarehouseByUser(My_Validate_API::getId());
+
+        $warehouse_user = array();
+        foreach ($warehouses as $res)
+        {
+          array_push($warehouse_user, $res['id_warehouse']);
+        }
+
+        $sends = $sendModel->getReceiveByUserAndDateStartEnd(implode(',', $warehouse_user), $date_start, $date_end);
+      }
 
       if (empty($sends))
       {
