@@ -72,6 +72,7 @@ class API_Model_Send extends My_Model_API
     }
 
     $select->where("send.id_user =?", $id_user);
+    $select->order("send.id_send DESC");
 
     return $select->query()->fetchAll();
   }
@@ -92,6 +93,7 @@ class API_Model_Send extends My_Model_API
     }
 
     $select->where("send.id_destination_warehouse in ($warehouse)");
+    $select->order("send.id_send DESC");
 
     return $select->query()->fetchAll();
   }

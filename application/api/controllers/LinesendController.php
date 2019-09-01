@@ -42,7 +42,7 @@ class API_LinesendController extends Zend_Rest_Controller
       $articles_array = (array)json_decode($body['articles']);
 
       if (empty($articles_array)) {
-        return My_Response::_handleCodeResponse("404", My_String::ERROR_MSG_INVALID_PARAMS);
+        return My_Response::_handleCodeResponse("404", "Todos los artículos ya han sido validados");
       }
 
       $id_send = $articles_array[0]->id_send;
@@ -113,9 +113,10 @@ class API_LinesendController extends Zend_Rest_Controller
           }
           else
           {
-            $warehouse_destinatio->setStock($warehouse_destinatio->getStock() + $r['amount']);
+            $new_warehouse_article = new My_Object_Warehousearticle();
+            $new_warehouse_article->setStock($warehouse_destinatio[0]['stock'] + $r['amount']);
 
-            $warehousearticleModel->editWarehousearticle($warehouse_destinatio->getIdWarehouseArticle(), $warehouse_destinatio);
+            $warehousearticleModel->editWarehousearticle($warehouse_destinatio[0]['id_warehouse_article'], $new_warehouse_article);
           }
         }
 
