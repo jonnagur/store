@@ -42,7 +42,7 @@ class API_LinesendController extends Zend_Rest_Controller
       $articles_array = (array)json_decode($body['articles']);
 
       if (empty($articles_array)) {
-        return My_Response::_handleCodeResponse("404", My_String::ERROR_MSG_INVALID_PARAMS);
+        return My_Response::_handleCodeResponse("404", "Todos los artículos ya han sido validados");
       }
 
       $id_send = $articles_array[0]->id_send;
