@@ -113,9 +113,10 @@ class API_LinesendController extends Zend_Rest_Controller
           }
           else
           {
-            $warehouse_destinatio->setStock($warehouse_destinatio->getStock() + $r['amount']);
+            $new_warehouse_article = new My_Object_Warehousearticle();
+            $new_warehouse_article->setStock($warehouse_destinatio[0]['stock'] + $r['amount']);
 
-            $warehousearticleModel->editWarehousearticle($warehouse_destinatio->getIdWarehouseArticle(), $warehouse_destinatio);
+            $warehousearticleModel->editWarehousearticle($warehouse_destinatio[0]['id_warehouse_article'], $new_warehouse_article);
           }
         }
 

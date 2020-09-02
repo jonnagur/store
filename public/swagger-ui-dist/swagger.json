@@ -1,0 +1,1186 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "AppStock",
+    "contact": {
+      "email": "jjgr0008@red.ujaen.es"
+    },
+    "version": "2.0"
+  },
+  "servers": [
+    {
+      "url": "http://51.83.45.39:8030/api",
+      "description": "API Stock"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "summary": "Autenticar al usuario",
+        "description": "Validar las credenciales del usuario",
+        "operationId": "API_LoginController::postAction",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Email del usuario",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "Contraseña del usuario",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/article": {
+      "get": {
+        "tags": [
+          "Article"
+        ],
+        "summary": "Devuelve todos los artículos según los parámetros",
+        "operationId": "API_ArticleController::getAction",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Nombre del artículo",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id_warehouse",
+            "in": "query",
+            "description": "Identificador del almacén",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Identificador del artículo",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id_category",
+            "in": "query",
+            "description": "Identificador de la categoria",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id_provider",
+            "in": "query",
+            "description": "Identificador del proveedor",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/user/getAllWarehouse/1": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Devuelve todos los almacenes del usuario",
+        "operationId": "API_UserController::getAction",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/send/type/{type}": {
+      "get": {
+        "tags": [
+          "Send"
+        ],
+        "summary": "Devuelve todas las salidas y entradas según el tipo",
+        "operationId": "API_SendController::getAction",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "description": "Tipo de envio",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "send",
+                "receive"
+              ]
+            }
+          },
+          {
+            "name": "date_start",
+            "in": "query",
+            "description": "Fecha inicio",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date_end",
+            "in": "query",
+            "description": "Fecha fin",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/warehouse/getAllWarehousesByMyCompany/1": {
+      "get": {
+        "tags": [
+          "Warehouse"
+        ],
+        "summary": "Devuelve todos los almacenes",
+        "description": "Devuelve todos los almacenes de la empresa que pertenece el usuario",
+        "operationId": "API_WarehouseController::getAction",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/send": {
+      "post": {
+        "tags": [
+          "Send"
+        ],
+        "summary": "Crear un envio de artículos",
+        "operationId": "API_SendController::postAction",
+        "parameters": [
+          {
+            "name": "id_origin_warehouse",
+            "in": "query",
+            "description": "Identificador del almacén de origen",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id_destination_warehouse",
+            "in": "query",
+            "description": "Identificador del almacén de destino",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "articles",
+            "in": "query",
+            "description": "Artículos del envío",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/linesend": {
+      "post": {
+        "tags": [
+          "Linesend"
+        ],
+        "summary": "Marca una linea de envio como resuelta",
+        "operationId": "API_LinesendController::postAction",
+        "parameters": [
+          {
+            "name": "articles",
+            "in": "query",
+            "description": "Listado de artículos",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/category/id/{id}": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Devuelve todas las categorias (solo si el usuario que lo solicita tiene privilegios)",
+        "operationId": "API_CategoryController::getAction",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Indentificador de la categoria",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/category": {
+      "post": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Crea una categoria",
+        "operationId": "API_CategoryController::postAction",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Nombre de la categoria",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/company": {
+      "post": {
+        "tags": [
+          "Company"
+        ],
+        "summary": "Crea una empresa",
+        "operationId": "API_CompanyController::postAction",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Nombre de la empresa",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Dirección de la empresa",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cp",
+            "in": "query",
+            "description": "Código postal de la empresa",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "Teléfono de la empresa",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cif",
+            "in": "query",
+            "description": "CIF de la empresa",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "mail_domain",
+            "in": "query",
+            "description": "Dominio de la empresa",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/company/": {
+      "get": {
+        "tags": [
+          "Company"
+        ],
+        "summary": "Devuelve la empresa del usuario",
+        "operationId": "API_CompanyController::getAction",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador de la empresa",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/provider/id/{id}": {
+      "get": {
+        "tags": [
+          "Provider"
+        ],
+        "summary": "Devuelve un proveedor",
+        "operationId": "API_ProviderController::getAction",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del proveedor",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/provider"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/provider": {
+      "post": {
+        "tags": [
+          "Provider"
+        ],
+        "summary": "Crea un proveedor",
+        "operationId": "API_ProviderController::postAction",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Nombre del proveedor",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Dirección de la empresa",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "Teléfono de la empresa",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cp",
+            "in": "query",
+            "description": "Código postal",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/subcategory/id/{id}": {
+      "get": {
+        "tags": [
+          "Subcategory"
+        ],
+        "summary": "Devuelve la subcategoria que se corresponda con el ID",
+        "operationId": "API_SubcategoryController::getAction",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador de la subcategoria",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/provider/{id}": {
+      "patch": {
+        "tags": [
+          "Provider"
+        ],
+        "summary": "Actualiza un proveedor",
+        "operationId": "API_ProviderController::patchAction",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del proveedor",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Atributos a cambiar del proveedor",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "Nombre del proveedor",
+                    "type": "string"
+                  },
+                  "address": {
+                    "description": "Dirección del proveedor",
+                    "type": "string"
+                  },
+                  "cp": {
+                    "description": "Código postal del proveedor",
+                    "type": "string"
+                  },
+                  "phone": {
+                    "description": "Teléfono del proveedor",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalids Params"
+          },
+          "401": {
+            "description": "Action Not Allowed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "article": {
+        "title": "article",
+        "required": [
+          "id_article",
+          "name",
+          "id_category",
+          "id_provider"
+        ],
+        "properties": {
+          "id_article": {
+            "description": "Identificador del artículo",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Nombre del artículo",
+            "type": "string"
+          },
+          "price": {
+            "description": "Precio del artículo",
+            "type": "string"
+          },
+          "code": {
+            "description": "Código único del artículo",
+            "type": "string"
+          },
+          "id_category": {
+            "description": "Identificador de la categoria",
+            "type": "integer"
+          },
+          "id_provider": {
+            "description": "Identificador del proveedor",
+            "type": "integer"
+          },
+          "created": {
+            "description": "Fecha de creación",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          },
+          "updated": {
+            "description": "Fecha de actualización",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          }
+        },
+        "type": "object"
+      },
+      "category": {
+        "title": "category",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "id_category": {
+            "description": "Identificador de la categoria",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Nombre de la categoria",
+            "type": "string"
+          },
+          "created": {
+            "description": "Fecha de creación",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          },
+          "updated": {
+            "description": "Fecha de actualización",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          }
+        }
+      },
+      "company": {
+        "title": "company",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "id_company": {
+            "description": "Identificador de la empresa",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Nombre de la empresa",
+            "type": "string"
+          },
+          "address": {
+            "description": "Dirección de la empresa",
+            "type": "string"
+          },
+          "cp": {
+            "description": "Código postal",
+            "type": "integer"
+          },
+          "cif": {
+            "description": "CIF de la empresa",
+            "type": "string"
+          },
+          "phone": {
+            "description": "Telefono de la empresa",
+            "type": "string"
+          },
+          "created": {
+            "description": "Fecha de creación",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          },
+          "updated": {
+            "description": "Fecha de actualización",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          },
+          "mail_domain": {
+            "description": "Email de la empresa",
+            "type": "string"
+          }
+        }
+      },
+      "send": {
+        "title": "send",
+        "required": [
+          "id_origin_warehouse",
+          "id_destination_warehouse"
+        ],
+        "properties": {
+          "id_send": {
+            "description": "Identificador de la categoria",
+            "type": "integer"
+          },
+          "id_origin_warehouse": {
+            "description": "Identificador del almacén de origen",
+            "type": "integer"
+          },
+          "id_destination_warehouse": {
+            "description": "Identificador del almacén de destino",
+            "type": "integer"
+          },
+          "status": {
+            "description": "Estado del envio",
+            "type": "string",
+            "enum": [
+              "send",
+              "received",
+              "received_partial"
+            ],
+            "default": "send"
+          },
+          "created": {
+            "description": "Fecha de creación",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          },
+          "updated": {
+            "description": "Fecha de actualización",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          }
+        }
+      },
+      "provider": {
+        "title": "provider",
+        "required": [
+          "name",
+          "address",
+          "phone"
+        ],
+        "properties": {
+          "id_provider": {
+            "description": "Identificador del proveedor",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Nombre del proveedor",
+            "type": "string"
+          },
+          "address": {
+            "description": "Dirección del proveedor",
+            "type": "string"
+          },
+          "cp": {
+            "description": "Código postal",
+            "type": "integer"
+          },
+          "phone": {
+            "description": "Teléfono",
+            "type": "string"
+          },
+          "created": {
+            "description": "Fecha de creación",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          },
+          "updated": {
+            "description": "Fecha de actualización",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          }
+        }
+      },
+      "subcategory": {
+        "title": "subcategory",
+        "required": [
+          "name",
+          "id_category"
+        ],
+        "properties": {
+          "id_subcategory": {
+            "description": "Identificador del proveedor",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Nombre de la subcategoria",
+            "type": "string"
+          },
+          "id_category": {
+            "description": "Indentificador de la categoria",
+            "type": "integer"
+          },
+          "created": {
+            "description": "Fecha de creación",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          },
+          "updated": {
+            "description": "Fecha de actualización",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          }
+        }
+      },
+      "user": {
+        "title": "user",
+        "required": [
+          "firstName",
+          "lastName",
+          "username",
+          "password",
+          "email"
+        ],
+        "properties": {
+          "userId": {
+            "description": "Identificador del usuario",
+            "type": "integer"
+          },
+          "firstName": {
+            "description": "Nombre del usuario",
+            "type": "string"
+          },
+          "lastName": {
+            "description": "Apellido del usuario",
+            "type": "string"
+          },
+          "username": {
+            "description": "Nombre de usuario",
+            "type": "string"
+          },
+          "password": {
+            "description": "Contraseña del usuario",
+            "type": "string"
+          },
+          "salt": {
+            "description": "Hash de la contraseña del usuario",
+            "type": "string"
+          },
+          "email": {
+            "description": "Correo electrónico del usuario",
+            "type": "string"
+          },
+          "roleId": {
+            "description": "Rol del usuario",
+            "type": "integer"
+          },
+          "image": {
+            "description": "Ruta del avatar del usuario",
+            "type": "string"
+          },
+          "id_company": {
+            "description": "Identificador de la empresa",
+            "type": "integer"
+          }
+        }
+      },
+      "warehouse": {
+        "title": "warehouse",
+        "required": [
+          "id_warehouse",
+          "name",
+          "address",
+          "phone"
+        ],
+        "properties": {
+          "id_warehouse": {
+            "description": "Identificador del almacén",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Nombre del almacén",
+            "type": "string"
+          },
+          "address": {
+            "description": "Dirección del almacén",
+            "type": "string"
+          },
+          "phone": {
+            "description": "Teléfono del almacén",
+            "type": "string"
+          },
+          "created": {
+            "description": "Fecha de creación",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          },
+          "updated": {
+            "description": "Fecha de actualización",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          }
+        }
+      },
+      "warehousearticle": {
+        "title": "warehousearticle",
+        "required": [
+          "stock",
+          "minimun_stock",
+          "id_warehouse",
+          "id_article"
+        ],
+        "properties": {
+          "id_warehouse_article": {
+            "description": "Identificador que relaciona un artículo con un almacén",
+            "type": "integer"
+          },
+          "id_warehouse": {
+            "description": "Identificador del almacén",
+            "type": "integer"
+          },
+          "id_article": {
+            "description": "Identificador del artículo",
+            "type": "integer"
+          },
+          "stock": {
+            "description": "Stock del almacén",
+            "type": "integer"
+          },
+          "minimum_stock": {
+            "description": "Stock mínimo",
+            "type": "integer"
+          },
+          "created": {
+            "description": "Fecha de creación",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          },
+          "updated": {
+            "description": "Fecha de actualización",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          }
+        }
+      },
+      "linesend": {
+        "title": "linesend",
+        "required": [
+          "amount",
+          "id_article",
+          "id_send",
+          "id_user"
+        ],
+        "properties": {
+          "id_line_send": {
+            "description": "Identificador",
+            "type": "integer"
+          },
+          "amount": {
+            "description": "Cantidad de artículos enviados",
+            "type": "integer"
+          },
+          "amount_received": {
+            "description": "Cantidad de artículos recibidos",
+            "type": "integer"
+          },
+          "id_article": {
+            "description": "Identificador del artículo",
+            "type": "integer"
+          },
+          "status": {
+            "description": "Estado de la linea",
+            "type": "string",
+            "enum": [
+              "pending",
+              "received",
+              "received_partial"
+            ]
+          },
+          "id_user": {
+            "description": "Identificador del usuario",
+            "type": "integer"
+          },
+          "id_send": {
+            "description": "Identificador de envio",
+            "type": "integer"
+          },
+          "created": {
+            "description": "Fecha de creación",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          },
+          "updated": {
+            "description": "Fecha de actualización",
+            "type": "string",
+            "example": "2020-01-01 08:00:00"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "bearerFormat": "JWT",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Article",
+      "description": "Artículos del sistema"
+    },
+    {
+      "name": "Login",
+      "description": "Autenticación en el sistema"
+    },
+    {
+      "name": "Category",
+      "description": "Categorias del sistema"
+    },
+    {
+      "name": "Company",
+      "description": "Empresas del sistema"
+    },
+    {
+      "name": "Send",
+      "description": "Envio de artículos"
+    },
+    {
+      "name": "Provider",
+      "description": "Proveedores en el sistema"
+    },
+    {
+      "name": "Subcategory",
+      "description": "Subcategorias almacenados en el sistema"
+    },
+    {
+      "name": "User",
+      "description": "Usuarios en el sistema"
+    },
+    {
+      "name": "Warehouse",
+      "description": "Almacenes en el sistema"
+    },
+    {
+      "name": "Linesend",
+      "description": "Lineas de un envio (artículos relativos a un envio)"
+    }
+  ]
+}

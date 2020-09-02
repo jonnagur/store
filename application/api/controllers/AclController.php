@@ -47,8 +47,9 @@ class API_AclController extends Zend_Rest_Controller
 
     public function getAction()
     {
-      if (My_Validate_API::getCod() != '200')
+      if (My_Validate_API::getCod() != '200') {
         return My_Response::_handleCodeResponse("400", My_String::ERROR_MSG_INVALID_CODE);
+      }
 
       $data = $this->getRequest()->getParams();
       $data = array_map('trim', $data);
